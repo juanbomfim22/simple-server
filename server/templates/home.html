@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block css %}
+<link href="{{ url_for('static', filename='css/os.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>{{title}}</h1>
+    <h5>{{description}}</h5>
+    <form>
+        <div class="form-group ">
+            <textarea name="textarea" class="text-white bg-dark form-control" id="exampleFormControlTextarea1"
+                rows="3"></textarea>
+        </div>
+        <div class="form-group row d-flex justify-content-center">
+            <div class="col-sm-12">
+                <button type="button" class="w-100 btn btn-primary">Enviar</button>
+            </div>
+        </div>
+    </form>
+    <span>Código</span>
+    <div id="code" style="overflow-x:auto" class="text-white bg-dark mb-3">
+    </div>
+    <span>Output</span>
+    <pre style="min-height: 8rem;" id="output" class="h-6 text-white bg-dark mb-3">
+        </pre>
+</div>
+<script>
+
+    const ajax = (path, reflectResultsIn) => {
+        $.ajax({
+            type: "POST",
+            url: path,
+            data: $("form").serialize(),
+            dataType: 'html',
+            success: function (data) {
+                console.log('Submission was successful.');
+                $(reflectResultsIn).html(data)
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+            },
+        })
+    }
+    const execute = () => {
+        ajax("/exec", "#output")
+    }
+
+    const convert = () => {
+        ajax("/convert", "#code")
+    }
+
+    window.onload = convert // para que fique com o fundo da pagina preto desde o inicio
+    $("textarea").on("input", convert)
+    $("button").on("click", execute)
+
+</script>
+{% endblock %}
