@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>ExecPy</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Rode o seu comando python.
+Faça um print(...) para ver resultados.">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#5eb9d7" />
+    <script src="/static/js/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/static/css/bootstrap.min.css"/>
+    
+<link href="/static/css/os.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <header>
+   <nav>
+    
+      <a href="">Início</a>
+    
+  </nav>
+</header>
+    
+<div class="container">
+    <h1>ExecPy</h1>
+    <h5>Rode o seu comando python.
+Faça um print(...) para ver resultados.</h5>
+    <form>
+        <div class="form-group ">
+            <textarea name="textarea" class="text-white bg-dark form-control" id="exampleFormControlTextarea1"
+                rows="3"></textarea>
+        </div>
+        <div class="form-group row d-flex justify-content-center">
+            <div class="col-sm-12">
+                <button type="button" class="w-100 btn btn-primary">Enviar</button>
+            </div>
+        </div>
+    </form>
+    <span>Código</span>
+    <div id="code" style="overflow-x:auto" class="text-white bg-dark mb-3">
+    </div>
+    <span>Output</span>
+    <pre style="min-height: 8rem;" id="output" class="h-6 text-white bg-dark mb-3">
+        </pre>
+</div>
+<script>
+
+    const ajax = (path, reflectResultsIn) => {
+        $.ajax({
+            type: "POST",
+            url: path,
+            data: $("form").serialize(),
+            dataType: 'html',
+            success: function (data) {
+                console.log('Submission was successful.');
+                $(reflectResultsIn).html(data)
+            },
+            error: function (data) {
+                console.log('An error occurred.');
+                console.log(data);
+            },
+        })
+    }
+    const execute = () => {
+        ajax("/exec", "#output")
+    }
+
+    const convert = () => {
+        ajax("/convert", "#code")
+    }
+
+    window.onload = convert // para que fique com o fundo da pagina preto desde o inicio
+    $("textarea").on("input", convert)
+    $("button").on("click", execute)
+
+</script>
+
+</body>
+
+</html>
